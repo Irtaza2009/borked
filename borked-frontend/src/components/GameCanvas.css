@@ -1,0 +1,91 @@
+.game-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.game-canvas {
+  border: 5px solid #333;
+  border-radius: 10px;
+  background: #87CEEB;
+  cursor: crosshair;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+.game-canvas:hover {
+  transform: scale(1.01);
+  transition: transform 0.2s;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  max-width: 500px;
+  width: 90%;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 3px solid #ff6b6b;
+  animation: modalBounce 0.3s ease-out;
+}
+
+@keyframes modalBounce {
+  0% { transform: scale(0.8) rotate(-5deg); }
+  50% { transform: scale(1.1) rotate(2deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+.close-btn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.close-btn:hover {
+  background: #ff6b6b;
+  transform: rotate(90deg);
+}
+
+.modal-content h2 {
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 24px;
+}
+
+.modal-content p {
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
