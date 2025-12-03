@@ -1,94 +1,112 @@
-import React, { useState, useEffect } from 'react';
-import './App.css';
-import GameCanvas from './components/GameCanvas';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Login from "./components/Login";
+import SubmissionForm from "./components/SubmissionForm";
+// import Voting from "./components/Voting";
+import Submitted from "./components/Submitted";
+import { LeaderboardManager } from "./components/Leaderboard";
+import SwordLoader from "./components/SwordLoader";
+import Gallery from "./components/Gallery";
+
+import "./App.css";
 
 function App() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [checking, setChecking] = useState(true);
+  const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState("home");
+  const [showColorWheel, setShowColorWheel] = useState(false);
 
   useEffect(() => {
-    checkAuthStatus();
+    axios
+      .get("https://backend.borked.irtaza.xyz/api/me", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setUser(res.data);
+        // Don't auto-show color wheel if user already has a color
+        setShowColorWheel(!res.data.color);
+      })
+      .catch((err) => {
+        if (err.response && err.response.status === 401) {
+          setUser(null);
+        } else {
+          console.error("Error fetching user:", err);
+          setError("Something went wrong. Please try again later.");
+        }
+      })
+      .finally(() => {
+        setChecking(false);
+      });
   }, []);
 
-  const checkAuthStatus = async () => {
-    try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}/auth/profile`,
-        { withCredentials: true }
-      );
-      setUser(response.data.user);
-    } catch (error) {
-      console.log('User not authenticated');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSlackLogin = () => {
-    window.location.href = `${process.env.REACT_APP_BACKEND_URL}/auth/slack`;
-  };
-
-  const handleLogout = async () => {
-    try {
-      await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}/auth/logout`,
+  // Sign out handler
+  const handleSignOut = () => {
+    axios
+      .post(
+        "https://backend.borked.irtaza.xyz/auth/logout",
         {},
         { withCredentials: true }
-      );
-      setUser(null);
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
+      )
+      .finally(() => {
+        window.location.reload();
+      });
   };
 
-  if (loading) {
-    return (
-      <div className="loading-screen">
-        <div className="stickman-loader">🏃‍♂️</div>
-        <p>Loading the most terribly designed site ever...</p>
-      </div>
-    );
-  }
 
-  if (!user) {
-    return (
-      <div className="login-screen">
-        <h1>🚪 Welcome to the Bad UI Design Competition! 🚪</h1>
-        <p>Control a stickman through the worst user experience imaginable!</p>
-        <div className="login-warning">
-          ⚠️ WARNING: This site contains deliberately terrible UX patterns! ⚠️
-        </div>
-        <button onClick={handleSlackLogin} className="slack-login-btn">
-          🔒 Enter via Slack (if you dare)
-        </button>
-        <div className="disclaimer">
-          <small>By entering, you agree to experience frustratingly bad design choices</small>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="App">
-      <div className="game-header">
-        <h1>🎮 BAD UI STICKMAN ADVENTURE 🎮</h1>
-        <div className="user-info">
-          <span>Welcome, {user.name}! 👋</span>
-          <button onClick={handleLogout} className="logout-btn">❌ Escape</button>
+      {/* Tabs - only show if signed in */}
+      {user && (
+        <div
+          className="tabs"
+          style={{ marginTop: "1rem", marginBottom: "0rem" }}
+        >
+          <button
+            className={activeTab === "home" ? "active" : ""}
+            onClick={() => setActiveTab("home")}
+          >
+            Home
+          </button>
+          <button
+            className={activeTab === "gallery" ? "active" : ""}
+            onClick={() => setActiveTab("gallery")}
+          >
+            Gallery
+          </button>
         </div>
-      </div>
-      <GameCanvas user={user} />
-      <div className="instructions">
-        <h3>🕹️ How to Suffer:</h3>
-        <p>• Use WASD or Arrow keys to move your stickman</p>
-        <p>• Find the moving square to build a bridge</p>
-        <p>• Convince the rude stickman to move (ask twice!)</p>
-        <p>• Enter doors for submission, gallery, or voting</p>
-        <p>• Don't fall in the pit... or do! 🕳️</p>
-      </div>
+      )}
+
+      {/* Tab Content */}
+      {activeTab === "gallery" ? (
+        <Gallery />
+      ) : checking ? (
+        <>
+          <SwordLoader />
+          <p className="cottage-text">Loading...</p>
+        </>
+      ) : error ? (
+        <p className="cottage-text error">{error}</p>
+      ) : !user ? (
+        <Login />
+      ) : !user.hasSubmitted ? (
+        <SubmissionForm user={user} />
+        //<Submitted lockedType="submission" />
+      ) : (
+        //<Voting user={user} />
+        <Submitted lockedType="voting" />
+      )}
+      <LeaderboardManager />
+      <footer className="footer-signout">
+        <span onClick={handleSignOut}>Sign out</span>
+      </footer>
     </div>
   );
 }
 
 export default App;
+
+/* To Do:
+- Export data
+*/
