@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 
 // Helper function to check if the string is a valid URL
@@ -122,7 +121,7 @@ export default function SubmissionForm({ user }) {
               text: p.text,
               total_seconds: p.total_seconds,
             })),
-          }
+          },
         },
         { withCredentials: true }
       );
@@ -155,135 +154,72 @@ export default function SubmissionForm({ user }) {
   );
   const selectedTotalTime = secondsToHuman(selectedTotalSeconds);
 
+  const descriptionWarning =
+    description.length > DESCRIPTION_LIMIT - 20 && description.length <= DESCRIPTION_LIMIT;
+  const isSuccessMessage = useMemo(
+    () => message && message.toLowerCase().includes("success"),
+    [message]
+  );
+
   return (
-    <div style={{ padding: "1rem", maxWidth: "500px", margin: "0 auto" }}>
+    <div className="parchment-form">
       <h2>Submit Your Project</h2>
 
-      <div style={{ marginBottom: "0.8rem" }}>
-        <label
-          htmlFor="siteUrl"
-          style={{ display: "block", fontWeight: "bold" }}
-        >
-          Demo URL
-        </label>
+      <div className="parchment-field">
+        <label htmlFor="siteUrl">Demo URL</label>
         <input
           id="siteUrl"
-          placeholder="(use a cdn! URL should start with https:// or http://)"
+          placeholder="(URL should start with https:// or http://)"
           value={siteUrl}
           onChange={(e) => setSiteUrl(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "0.5rem",
-            marginBottom: "1rem",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-          }}
         />
       </div>
 
-     <div style={{ marginBottom: "1rem" }}>
-        <label
-          htmlFor="sourceUrl"
-          style={{ display: "block", fontWeight: "bold" }}
-        >
-          Source Code URL
-        </label>
+      <div className="parchment-field">
+        <label htmlFor="sourceUrl">Source Code URL</label>
         <input
           id="sourceUrl"
           placeholder="e.g GitHub Repo link"
           value={sourceUrl}
           onChange={(e) => setSourceUrl(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "0.5rem",
-            marginBottom: "1rem",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-          }}
         />
       </div>
 
-      <div style={{ marginBottom: "0.8rem" }}>
-        <label
-          htmlFor="imageUrl"
-          style={{ display: "block", fontWeight: "bold" }}
-        >
-          Image URL 
-        </label>
+      <div className="parchment-field">
+        <label htmlFor="imageUrl">Image URL</label>
         <input
           id="imageUrl"
           placeholder="(you can use #cdn, or any other cdn)"
           value={imageUrl}
           onChange={handleImageChange}
-          style={{
-            width: "100%",
-            padding: "0.5rem",
-            marginBottom: "1rem",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-          }}
         />
       </div>
 
       {imagePreview && (
-        <div style={{ marginBottom: "0.8rem" }}>
+        <div className="parchment-field">
           <h4>Image Preview</h4>
-          <img
-            src={imagePreview}
-            alt="Preview"
-            style={{
-              width: "100%",
-              height: "180px",
-              objectFit: "cover",
-              borderRadius: "4px",
-            }}
-          />
+          <img src={imagePreview} alt="Preview" className="parchment-image" />
         </div>
       )}
 
-      <div style={{ marginBottom: "0.8rem" }}>
-        <label
-          htmlFor="description"
-          style={{ display: "block", fontWeight: "bold" }}
-        >
-          Description
-        </label>
+      <div className="parchment-field">
+        <label htmlFor="description">Project Description</label>
         <textarea
           id="description"
+          className="parchment-textarea"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           required
           maxLength={DESCRIPTION_LIMIT}
           rows={4}
-          style={{
-            width: "100%",
-            padding: "0.5rem",
-            marginBottom: "0.3rem",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            fontFamily: "inherit",
-            fontSize: "1rem",
-            resize: "vertical",
-          }}
         />
-        <div
-          style={{
-            fontSize: "0.95em",
-            color:
-              description.length > DESCRIPTION_LIMIT - 20 ? "#c4453e" : "#888",
-          }}
-        >
+        <div className={`parchment-helper ${descriptionWarning ? "warn" : ""}`}>
           {description.length}/{DESCRIPTION_LIMIT} characters
         </div>
       </div>
 
-      <div style={{ marginBottom: "0.8rem" }}>
-        <label
-          htmlFor="projectName"
-          style={{ display: "block", fontWeight: "bold" }}
-        >
-          Name
-        </label>
+      <div className="parchment-field">
+        <label htmlFor="projectName">Project Name</label>
         <input
           id="projectName"
           value={projectName}
@@ -291,40 +227,28 @@ export default function SubmissionForm({ user }) {
           required
           maxLength={60}
           placeholder="Enter your project name"
-          style={{
-            width: "100%",
-            padding: "0.5rem",
-            marginBottom: "1rem",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-          }}
         />
       </div>
 
-     {projects.length > 0 && (
-        <div style={{ marginBottom: "1rem" }}>
-          <label htmlFor="hackatime-projects" style={{ fontWeight: "bold" }}>
-            Link Hackatime Projects (optional)
-          </label>
+      {projects.length > 0 && (
+        <div className="parchment-field">
+          <label htmlFor="hackatime-projects">Link Hackatime Projects (optional)</label>
           <select
             id="hackatime-projects"
             onChange={(e) => {
               const selectedName = e.target.value;
               const project = projects.find((p) => p.name === selectedName);
-              if (
-                project &&
-                !selectedProjects.find((p) => p.name === project.name)
-              ) {
-                setSelectedProjects([...selectedProjects, project]);
+              if (project && !selectedProjects.find((p) => p.name === project.name)) {
+                setSelectedProjects([
+                  ...selectedProjects,
+                  {
+                    name: project.name,
+                    text: project.text,
+                    total_seconds: project.total_seconds,
+                  },
+                ]);
               }
-              e.target.value = ""; // Reset dropdown
-            }}
-            style={{
-              width: "100%",
-              padding: "0.5rem",
-              marginBottom: "0.5rem",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
+              e.target.value = "";
             }}
           >
             <option value="">-- Select a project --</option>
@@ -338,65 +262,48 @@ export default function SubmissionForm({ user }) {
           {/* Show selected project "pills" */}
 
           {selectedProjects.length > 0 && (
-            <div
-              style={{
-                display: "flex",
-                flexWrap: "wrap",
-                gap: "0.5rem",
-                marginBottom: "0.5rem",
-              }}
-            >
+            <div className="parchment-pills">
               {selectedProjects.map((proj) => (
-                <div
-                  key={proj.name}
-                  style={{
-                    padding: "0.4rem 0.8rem",
-                    backgroundColor: "#f0f0f0",
-                    borderRadius: "20px",
-                    display: "flex",
-                    alignItems: "center",
-                    fontSize: "0.9rem",
-                  }}
-                >
+                <span className="parchment-pill" key={proj.name}>
                   {proj.name} ({proj.text})
-                  <span
+                  <button
+                    type="button"
                     onClick={() =>
                       setSelectedProjects(
                         selectedProjects.filter((p) => p.name !== proj.name)
                       )
                     }
-                    style={{
-                      marginLeft: "0.5rem",
-                      cursor: "pointer",
-                      color: "red",
-                      fontWeight: "bold",
-                    }}
+                    aria-label={`Remove ${proj.name}`}
                   >
-                    ✖️
-                  </span>
-                </div>
+                    ✕
+                  </button>
+                </span>
               ))}
             </div>
           )}
 
           {selectedTotalTime && (
-            <div style={{ fontSize: "0.95em" }}>
+            <div className="parchment-summary">
               <b>Total Hackatime:</b> {selectedTotalTime}
             </div>
           )}
         </div>
       )}
 
-
       <button
+        type="button"
+        className="parchment-submit"
         onClick={submit}
         disabled={loading}
-        style={{ padding: "0.5rem 1rem", cursor: "pointer" }}
       >
         {loading ? "Submitting..." : "Submit"}
       </button>
 
-      {message && <p style={{ marginTop: "1rem", color: "red" }}>{message}</p>}
+      {message && (
+        <p className={`parchment-message ${isSuccessMessage ? "success" : ""}`}>
+          {message}
+        </p>
+      )}
     </div>
   );
 }

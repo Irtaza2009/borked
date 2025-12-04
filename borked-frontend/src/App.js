@@ -14,7 +14,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [checking, setChecking] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState("home");
+  const [activeTab, setActiveTab] = useState("submit");
 
   useEffect(() => {
     axios
@@ -56,45 +56,53 @@ function App() {
 
   return (
     <div className="App">
-      {/* Tabs - only show if signed in */}
-      {user && (
-        <div
-          className="tabs"
-        >
-          <button
-            className={activeTab === "home" ? "active" : ""}
-            onClick={() => setActiveTab("home")}
-          >
-            Home
-          </button>
-          <button
-            className={activeTab === "gallery" ? "active" : ""}
-            onClick={() => setActiveTab("gallery")}
-          >
-            Gallery
-          </button>
-        </div>
-      )}
+      <h1 className="app-heading" aria-label="Borked title">
+        borked
+      </h1>
+      <div className="parchment-frame">
+        {/* Tabs - only show if signed in */}
+        {user && (
+          <div className="app-tabs" role="tablist" aria-label="Main sections">
+            <button
+              type="button"
+              className={`app-tab ${activeTab === "submit" ? "active" : ""}`}
+              onClick={() => setActiveTab("submit")}
+              aria-pressed={activeTab === "submit"}
+            >
+              Submit
+            </button>
+            <button
+              type="button"
+              className={`app-tab ${activeTab === "gallery" ? "active" : ""}`}
+              onClick={() => setActiveTab("gallery")}
+              aria-pressed={activeTab === "gallery"}
+            >
+              Gallery
+            </button>
+          </div>
+        )}
 
-      {/* Tab Content */}
-      {activeTab === "gallery" ? (
-        <Gallery />
-      ) : checking ? (
-        <>
-          <SwordLoader />
-          <p className="cottage-text">Loading...</p>
-        </>
-      ) : error ? (
-        <p className="cottage-text error">{error}</p>
-      ) : !user ? (
-        <Login />
-      ) : !user.hasSubmitted ? (
-        <SubmissionForm user={user} />
-        //<Submitted lockedType="submission" />
-      ) : (
-        //<Voting user={user} />
-        <Submitted lockedType="voting" />
-      )}
+        <div className="parchment-sheet">
+          {activeTab === "gallery" ? (
+            <Gallery />
+          ) : checking ? (
+            <>
+              <SwordLoader />
+              <p className="cottage-text">Loading...</p>
+            </>
+          ) : error ? (
+            <p className="cottage-text error">{error}</p>
+          ) : !user ? (
+            <Login />
+          ) : !user.hasSubmitted ? (
+            <SubmissionForm user={user} />
+            //<Submitted lockedType="submission" />
+          ) : (
+            //<Voting user={user} />
+            <Submitted lockedType="voting" />
+          )}
+        </div>
+      </div>
       <LeaderboardManager />
       <footer className="footer-signout">
         <span onClick={handleSignOut}>Sign out</span>
