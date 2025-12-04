@@ -15,17 +15,16 @@ function App() {
   const [checking, setChecking] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("home");
-  const [showColorWheel, setShowColorWheel] = useState(false);
 
   useEffect(() => {
     axios
-      .get("https://backend.borked.irtaza.xyz/api/me", {
+      .get(//"https://backend.borked.irtaza.xyz/api/me",
+        "http://localhost:5000/api/me", // for local
+      {
         withCredentials: true,
       })
       .then((res) => {
         setUser(res.data);
-        // Don't auto-show color wheel if user already has a color
-        setShowColorWheel(!res.data.color);
       })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
@@ -61,7 +60,6 @@ function App() {
       {user && (
         <div
           className="tabs"
-          style={{ marginTop: "1rem", marginBottom: "0rem" }}
         >
           <button
             className={activeTab === "home" ? "active" : ""}

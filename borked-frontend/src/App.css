@@ -3,7 +3,7 @@
 body {
   margin: 0;
   padding: 0;
-  background: #f3efe7; /* soft cream background */
+  background: #ffffff; /* soft cream background */
   font-family: "Patrick Hand", cursive;
   color: #3b2e24; /* deep earthy brown for text */
   transition: background 0.3s ease;
@@ -229,8 +229,8 @@ h4 {
 .tabs {
   display: flex;
   gap: 0.5rem;
-  margin-top: 0;
-  margin-bottom: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 0rem;
   flex-wrap: wrap;
   justify-content: center;
 }
