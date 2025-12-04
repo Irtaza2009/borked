@@ -123,6 +123,33 @@ body {
   text-align: center;
 }
 
+.home-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  animation: softFade 0.9s ease-in-out;
+}
+
+.home-title {
+  margin: 0;
+  font-size: 2.1rem;
+  color: #2f1d11;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.home-text {
+  margin: 0;
+  font-size: 1.1rem;
+  color: rgba(44, 27, 15, 0.82);
+  letter-spacing: 0.04em;
+  line-height: 1.7;
+}
+
 .error {
   color: #8f2b21;
 }

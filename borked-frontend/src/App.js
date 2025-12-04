@@ -7,6 +7,7 @@ import Submitted from "./components/Submitted";
 import { LeaderboardManager } from "./components/Leaderboard";
 import SwordLoader from "./components/SwordLoader";
 import Gallery from "./components/Gallery";
+import Home from "./components/Home";
 
 import "./App.css";
 
@@ -14,7 +15,7 @@ function App() {
   const [user, setUser] = useState(null);
   const [checking, setChecking] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState("submit");
+  const [activeTab, setActiveTab] = useState("home");
 
   useEffect(() => {
     axios
@@ -57,12 +58,19 @@ function App() {
   return (
     <div className="App">
       <h1 className="app-heading" aria-label="Borked title">
-        borked
+        Borked
       </h1>
       <div className="parchment-frame">
-        {/* Tabs - only show if signed in */}
-        {user && (
-          <div className="app-tabs" role="tablist" aria-label="Main sections">
+        <div className="app-tabs" role="tablist" aria-label="Main sections">
+          <button
+            type="button"
+            className={`app-tab ${activeTab === "home" ? "active" : ""}`}
+            onClick={() => setActiveTab("home")}
+            aria-pressed={activeTab === "home"}
+          >
+            Home
+          </button>
+          {user && (
             <button
               type="button"
               className={`app-tab ${activeTab === "submit" ? "active" : ""}`}
@@ -71,6 +79,8 @@ function App() {
             >
               Submit
             </button>
+          )}
+          {user && (
             <button
               type="button"
               className={`app-tab ${activeTab === "gallery" ? "active" : ""}`}
@@ -79,11 +89,13 @@ function App() {
             >
               Gallery
             </button>
-          </div>
-        )}
+          )}
+        </div>
 
         <div className="parchment-sheet">
-          {activeTab === "gallery" ? (
+          {activeTab === "home" ? (
+            <Home />
+          ) : activeTab === "gallery" ? (
             <Gallery />
           ) : checking ? (
             <>
