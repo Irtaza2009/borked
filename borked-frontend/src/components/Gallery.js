@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import "./Voting.css"; // Reuse voting card styles
+import "./Voting.css"; // Reuse parchment styles
+import SwordLoader from "./SwordLoader";
 import { API_BASE_URL } from "../config";
 
 const defaultAvatar =
@@ -13,121 +14,135 @@ export default function Gallery({
 }) {
   const [submissions, setSubmissions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    setLoading(true);
+    setError(null);
+
     axios
       .get(submissionsApi, { withCredentials: true })
       .then((res) => setSubmissions(res.data))
+      .catch(() =>
+        setError(
+          "We couldn't fetch the gallery just now. Please try again shortly."
+        )
+      )
       .finally(() => setLoading(false));
   }, [submissionsApi]);
 
   if (loading) {
     return (
-      <div style={{ textAlign: "center", marginTop: "2rem" }}>
-        <h2>Loading Gallery...</h2>
+      <div className="gallery-status">
+        <SwordLoader />
+        <p className="cottage-text">Summoning entries from the vault...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="gallery-status">
+        <p className="cottage-text error">{error}</p>
+      </div>
+    );
+  }
+
+  if (!submissions.length) {
+    return (
+      <div className="gallery-status">
+        <p className="cottage-text">No submissions yet. Check back soon!</p>
       </div>
     );
   }
 
   return (
-    <div style={{ padding: "1rem" }}>
-      <h2 style={{ textAlign: "center", marginBottom: "2rem" }}>
-        Gallery
-      </h2>
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "2rem",
-          justifyContent: "center",
-        }}
-      >
-        {submissions.map((s) => (
-          <div key={s._id} className="vote-card" style={{ width: 280 }}>
-            <img src={s.imageUrl} alt="preview" className="vote-image" />
-            <div
-              style={{
-                fontWeight: "bold",
-                fontSize: "1.35em",
-                margin: "0.7rem 0 0 0",
-                color: "#2d1c0b",
-                letterSpacing: "0.01em",
-              }}
-            >
-              {s.projectName}
-            </div>
-            <div
-              className="vote-user"
-              style={{
-                fontWeight: "normal",
-                fontSize: "0.95em",
-                color: "#7d6b5a",
-                marginTop: "0.1rem",
-                marginBottom: "0.2rem",
-                justifyContent: "flex-start",
-                gap: "0.3rem",
-              }}
-            >
-              <img
-                src={s.user?.avatar}
-                alt={s.user?.name || "Anonymous"}
-                className="user-avatar"
-                style={{
-                  width: 22,
-                  height: 22,
-                  borderRadius: "50%",
-                  objectFit: "cover",
-                  border: "1px solid #ccc",
-                }}
-                onError={(e) => (e.target.src = defaultAvatar)}
-              />
-              <span>{s.user?.name || "Anonymous"}</span>
-            </div>
-            <div style={{ margin: "0.5rem 0" }}>
-              <a
-                href={s.siteUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="vote-link"
-              >
-                Demo
-              </a>
-             {s.sourceUrl && (
-                <a
-                  href={s.sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="source-link"
-                >
-                  View Source
-                </a>
-              )}
-            </div>
-            {s.description && (
-              <div
-                style={{
-                  margin: "0.5rem 0",
-                  fontSize: "1em",
-                  color: "#3b2e24",
-                  background: "#f8f4ee",
-                  borderRadius: "8px",
-                  padding: "0.5em",
-                  minHeight: "2.5em",
-                  wordBreak: "break-word",
-                  textAlign: "left",
-                }}
-              >
-                <b>Description:</b> {s.description}
+    <section className="gallery-container" aria-label="Submission gallery">
+      <header className="gallery-header">
+        <h2 className="gallery-title">Gallery</h2>
+        <p className="gallery-description">
+          Stroll through the halls of Borked and admire every masterpiece.
+        </p>
+      </header>
+
+      <div className="gallery-grid">
+        {submissions.map((s) => {
+          const projectName = s.projectName || "Untitled";
+          const userName = s.user?.name || "Anonymous";
+          const avatar = s.user?.avatar || defaultAvatar;
+
+          return (
+            <article key={s._id} className="voting-card gallery-card">
+              <figure className="gallery-figure">
+                <img
+                  src={s.imageUrl}
+                  alt={`${projectName} preview`}
+                  className="voting-image gallery-image"
+                />
+              </figure>
+
+              <div className="voting-card-body">
+                <h3 className="voting-project gallery-project">
+                  {projectName}
+                </h3>
+
+                <div className="voting-author gallery-author">
+                  <img
+                    src={avatar}
+                    alt={`${userName}'s avatar`}
+                    className="voting-avatar"
+                    onError={(e) => {
+                      e.currentTarget.onerror = null;
+                      e.currentTarget.src = defaultAvatar;
+                    }}
+                  />
+                  <span>{userName}</span>
+                </div>
+
+                {(s.siteUrl || s.sourceUrl) && (
+                  <div className="gallery-links">
+                    {s.siteUrl && (
+                      <a
+                        href={s.siteUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="voting-link primary"
+                      >
+                        View Demo
+                      </a>
+                    )}
+                    {s.sourceUrl && (
+                      <a
+                        href={s.sourceUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="voting-link secondary"
+                      >
+                        View Source
+                      </a>
+                    )}
+                  </div>
+                )}
+
+                {s.description && (
+                  <p className="voting-description gallery-description-blurb">
+                    <span className="voting-description-label">
+                      Description:
+                    </span>{" "}
+                    {s.description}
+                  </p>
+                )}
+
+                {s.hackatime?.totalTime && (
+                  <p className="gallery-meta">
+                    <span>HackaTime:</span> {s.hackatime.totalTime}
+                  </p>
+                )}
               </div>
-            )}
-            {s.hackatime?.totalTime && (
-              <div style={{ fontSize: "0.95em", marginTop: "0.5em" }}>
-                <b>HackaTime:</b> {s.hackatime.totalTime}
-              </div>
-            )}
-          </div>
-        ))}
+            </article>
+          );
+        })}
       </div>
-    </div>
+    </section>
   );
 }
