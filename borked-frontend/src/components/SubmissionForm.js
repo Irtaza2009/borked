@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
+import { API_BASE_URL } from "../config";
 
 // Helper function to check if the string is a valid URL
 const isValidUrl = (url) => {
@@ -107,7 +108,7 @@ export default function SubmissionForm({ user }) {
       const sanitizedSiteUrl = sanitizeUrl(siteUrl);
 
       await axios.post(
-        "https://backend.borked.irtaza.xyz/api/submit",
+        `${API_BASE_URL}/submit`,
         {
           siteUrl: sanitizedSiteUrl,
           imageUrl,

@@ -1,9 +1,9 @@
 import React from "react";
+import { BACKEND_URL } from "../config";
 
 export default function Login() {
   const login = () => {
-    window.location.href = "https://backend.borked.irtaza.xyz/auth/slack"; // for prod:
-    //window.location.href = "http://localhost:5000/auth/slack"; // for dev
+    window.location.href = `${BACKEND_URL}/auth/slack`;
   };
 
   return (

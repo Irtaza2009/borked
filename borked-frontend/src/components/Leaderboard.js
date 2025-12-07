@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import SwordLoader from "./SwordLoader";
+import { BACKEND_URL } from "../config";
 
 const Leaderboard = ({ onClose }) => {
   const [leaderboardData, setLeaderboardData] = useState(null);
@@ -20,7 +21,7 @@ const Leaderboard = ({ onClose }) => {
       try {
         const adminSecret = localStorage.getItem("adminSecret");
         const response = await axios.get(
-          "https://backend.borked.irtaza.xyz/admin/leaderboard",
+          `${BACKEND_URL}/admin/leaderboard`,
           {
             headers: {
               "x-admin-secret": adminSecret,
@@ -201,7 +202,7 @@ const Leaderboard = ({ onClose }) => {
   const handleResetConfirm = async (secret) => {
     try {
      /* const res = await axios.post(
-        "https://backend.borked.irtaza.xyz/admin/reset",
+      `${BACKEND_URL}/admin/reset`,
         {},
         {
           headers: {
@@ -322,7 +323,7 @@ const AdminGate = ({ onSuccess }) => {
   const verifyAdminSecret = async (secret) => {
     try {
       const response = await axios.get(
-        "https://backend.arena.hackclub.com/admin/leaderboard",
+        `${BACKEND_URL}/admin/leaderboard`,
         {
           headers: { "x-admin-secret": secret },
           validateStatus: () => true, // Don't throw on 403
@@ -368,7 +369,7 @@ export const LeaderboardManager = () => {
       if (storedSecret) {
         try {
           const isValid = await axios.get(
-            "https://backend.borked.irtaza.xyz/admin/leaderboard",
+            `${BACKEND_URL}/admin/leaderboard`,
             {
               headers: { "x-admin-secret": storedSecret },
               validateStatus: () => true,

@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Login from "./components/Login";
 import SubmissionForm from "./components/SubmissionForm";
-// import Voting from "./components/Voting";
+import Voting from "./components/Voting";
 import Submitted from "./components/Submitted";
 import { LeaderboardManager } from "./components/Leaderboard";
 import SwordLoader from "./components/SwordLoader";
 import Gallery from "./components/Gallery";
 import Home from "./components/Home";
+import { API_BASE_URL, BACKEND_URL } from "./config";
 
 import "./App.css";
 
@@ -19,9 +20,7 @@ function App() {
 
   useEffect(() => {
     axios
-      .get(//"https://backend.borked.irtaza.xyz/api/me",
-        "http://localhost:5000/api/me", // for local
-      {
+      .get(`${API_BASE_URL}/me`, {
         withCredentials: true,
       })
       .then((res) => {
@@ -44,13 +43,51 @@ function App() {
   const handleSignOut = () => {
     axios
       .post(
-        "https://backend.borked.irtaza.xyz/auth/logout",
+        `${BACKEND_URL}/auth/logout`,
         {},
         { withCredentials: true }
       )
       .finally(() => {
         window.location.reload();
       });
+  };
+
+  const renderLoading = () => (
+    <>
+      <SwordLoader />
+      <p className="cottage-text">Loading...</p>
+    </>
+  );
+
+  const renderActiveContent = () => {
+    switch (activeTab) {
+      case "home":
+        return <Home />;
+      case "gallery":
+        if (checking) return renderLoading();
+        if (error) return <p className="cottage-text error">{error}</p>;
+        if (!user) return <Login />;
+        return <Gallery />;
+      case "voting":
+        if (checking) return renderLoading();
+        if (error) return <p className="cottage-text error">{error}</p>;
+        if (!user) return <Login />;
+        return user.hasSubmitted ? (
+          <Voting />
+        ) : (
+          <Submitted lockedType="submitFirst" />
+        );
+      case "submit":
+      default:
+        if (checking) return renderLoading();
+        if (error) return <p className="cottage-text error">{error}</p>;
+        if (!user) return <Login />;
+        return !user.hasSubmitted ? (
+          <SubmissionForm user={user} />
+        ) : (
+          <Submitted lockedType="submitSuccess" />
+        );
+    }
   };
 
 
@@ -70,14 +107,22 @@ function App() {
           >
             Home
           </button>
+          <button
+            type="button"
+            className={`app-tab ${activeTab === "submit" ? "active" : ""}`}
+            onClick={() => setActiveTab("submit")}
+            aria-pressed={activeTab === "submit"}
+          >
+            Submit
+          </button>
           {user && (
             <button
               type="button"
-              className={`app-tab ${activeTab === "submit" ? "active" : ""}`}
-              onClick={() => setActiveTab("submit")}
-              aria-pressed={activeTab === "submit"}
+              className={`app-tab ${activeTab === "voting" ? "active" : ""}`}
+              onClick={() => setActiveTab("voting")}
+              aria-pressed={activeTab === "voting"}
             >
-              Submit
+              Voting
             </button>
           )}
           {user && (
@@ -92,28 +137,7 @@ function App() {
           )}
         </div>
 
-        <div className="parchment-sheet">
-          {activeTab === "home" ? (
-            <Home />
-          ) : activeTab === "gallery" ? (
-            <Gallery />
-          ) : checking ? (
-            <>
-              <SwordLoader />
-              <p className="cottage-text">Loading...</p>
-            </>
-          ) : error ? (
-            <p className="cottage-text error">{error}</p>
-          ) : !user ? (
-            <Login />
-          ) : !user.hasSubmitted ? (
-            <SubmissionForm user={user} />
-            //<Submitted lockedType="submission" />
-          ) : (
-            //<Voting user={user} />
-            <Submitted lockedType="voting" />
-          )}
-        </div>
+        <div className="parchment-sheet">{renderActiveContent()}</div>
       </div>
       <LeaderboardManager />
       <footer className="footer-signout">
