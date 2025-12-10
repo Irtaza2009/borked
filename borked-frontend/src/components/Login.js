@@ -9,7 +9,8 @@ export default function Login() {
   return (
     <div className="form-container">
       <div style={{ textAlign: "center", marginTop: "1rem" }}>
-        <h2>Welcome to the Arena!</h2>
+        <h2>Borked</h2>
+        <h3 style={{ margin: 0, letterSpacing: "0.12em", textTransform: "uppercase" }}>A Bad UI Competition</h3>
         <button onClick={login}>Login with Slack</button>
       </div>
     </div>
