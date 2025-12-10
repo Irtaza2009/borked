@@ -50,6 +50,15 @@ router.get("/submissions", auth, async (req, res) => {
   res.json(submissions);
 });
 
+// Public gallery access (no auth)
+router.get("/public-submissions", async (req, res) => {
+  const submissions = await Submission.find()
+    .populate("user", "name avatar")
+    .select("-__v");
+
+  res.json(submissions);
+});
+
 router.get("/user-votes", auth, async (req, res) => {
   res.json({ count: req.user.votes || 0 });
 });

@@ -66,7 +66,6 @@ function App() {
       case "gallery":
         if (checking) return renderLoading();
         if (error) return <p className="cottage-text error">{error}</p>;
-        if (!user) return <Login />;
         return <Gallery />;
       case "voting":
         if (checking) return renderLoading();
