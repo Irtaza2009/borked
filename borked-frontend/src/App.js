@@ -62,7 +62,7 @@ function App() {
   const renderActiveContent = () => {
     switch (activeTab) {
       case "home":
-        return <Home />;
+        return <Home user={user} />;
       case "gallery":
         if (checking) return renderLoading();
         if (error) return <p className="cottage-text error">{error}</p>;
@@ -107,14 +107,16 @@ function App() {
           >
             Home
           </button>
-          <button
-            type="button"
-            className={`app-tab ${activeTab === "submit" ? "active" : ""}`}
-            onClick={() => setActiveTab("submit")}
-            aria-pressed={activeTab === "submit"}
-          >
-            Submit
-          </button>
+          {user && (
+            <button
+              type="button"
+              className={`app-tab ${activeTab === "submit" ? "active" : ""}`}
+              onClick={() => setActiveTab("submit")}
+              aria-pressed={activeTab === "submit"}
+            >
+              Submit
+            </button>
+          )}
           {user && (
             <button
               type="button"
@@ -125,16 +127,14 @@ function App() {
               Voting
             </button>
           )}
-          {user && (
-            <button
-              type="button"
-              className={`app-tab ${activeTab === "gallery" ? "active" : ""}`}
-              onClick={() => setActiveTab("gallery")}
-              aria-pressed={activeTab === "gallery"}
-            >
-              Gallery
-            </button>
-          )}
+          <button
+            type="button"
+            className={`app-tab ${activeTab === "gallery" ? "active" : ""}`}
+            onClick={() => setActiveTab("gallery")}
+            aria-pressed={activeTab === "gallery"}
+          >
+            Gallery
+          </button>
         </div>
 
         <div className="parchment-sheet">{renderActiveContent()}</div>
