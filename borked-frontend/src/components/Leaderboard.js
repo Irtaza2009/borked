@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import SwordLoader from "./SwordLoader";
+import SwordLoader from "./HourglassLoader";
 import { BACKEND_URL } from "../config";
 
 const Leaderboard = ({ onClose }) => {

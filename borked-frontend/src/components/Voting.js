@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Voting.css";
-import SwordLoader from "./SwordLoader";
+import SwordLoader from "./HourglassLoader";
 import { API_BASE_URL } from "../config";
 
 const defaultAvatar =

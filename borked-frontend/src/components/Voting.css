@@ -3,7 +3,6 @@
   display: flex;
   flex-direction: column;
   gap: 1.75rem;
-  animation: softFade 0.9s ease-in-out;
 }
 
 .voting-header {
@@ -310,7 +309,6 @@
   display: flex;
   flex-direction: column;
   gap: 1.75rem;
-  animation: softFade 0.9s ease-in-out;
 }
 
 .gallery-header {
@@ -392,5 +390,4 @@
   align-items: center;
   gap: 1rem;
   text-align: center;
-  animation: softFade 0.9s ease-in-out;
 }

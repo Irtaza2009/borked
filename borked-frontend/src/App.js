@@ -5,7 +5,7 @@ import SubmissionForm from "./components/SubmissionForm";
 import Voting from "./components/Voting";
 import Submitted from "./components/Submitted";
 import { LeaderboardManager } from "./components/Leaderboard";
-import SwordLoader from "./components/SwordLoader";
+import HourglassLoader from "./components/HourglassLoader";
 import Gallery from "./components/Gallery";
 import Home from "./components/Home";
 import { API_BASE_URL, BACKEND_URL } from "./config";
@@ -54,7 +54,7 @@ function App() {
 
   const renderLoading = () => (
     <>
-      <SwordLoader />
+      <HourglassLoader />
       <p className="cottage-text">Loading...</p>
     </>
   );
