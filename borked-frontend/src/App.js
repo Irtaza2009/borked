@@ -8,6 +8,7 @@ import { LeaderboardManager } from "./components/Leaderboard";
 import HourglassLoader from "./components/HourglassLoader";
 import Gallery from "./components/Gallery";
 import Home from "./components/Home";
+import UselessToggle from "./components/UselessToggle";
 import { API_BASE_URL, BACKEND_URL } from "./config";
 
 import "./App.css";
@@ -17,6 +18,7 @@ function App() {
   const [checking, setChecking] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState("home");
+  const [toggleCompleted, setToggleCompleted] = useState(false);
 
   useEffect(() => {
     axios
@@ -89,9 +91,7 @@ function App() {
     }
   };
 
-
-
-  return (
+  const renderMainApp = () => (
     <div className="App">
       <h1 className="app-heading" aria-label="Borked title">
         Borked
@@ -143,6 +143,15 @@ function App() {
         <span onClick={handleSignOut}>Sign out</span>
       </footer>
     </div>
+  );
+
+  return (
+    <>
+      {!toggleCompleted && (
+        <UselessToggle onComplete={() => setToggleCompleted(true)} />
+      )}
+      {toggleCompleted && renderMainApp()}
+    </>
   );
 }
 

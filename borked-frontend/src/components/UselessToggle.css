@@ -1,0 +1,345 @@
+/* Fullscreen overlay */
+.useless-toggle-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: 
+    linear-gradient(
+      135deg,
+      rgba(52, 43, 36, 0.97) 0%,
+      rgba(72, 58, 47, 0.95) 50%,
+      rgba(52, 43, 36, 0.97) 100%
+    ),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 3px,
+      rgba(143, 59, 65, 0.03) 3px,
+      rgba(143, 59, 65, 0.03) 6px
+    );
+  animation: overlayFadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes overlayFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.toggle-content {
+  text-align: center;
+  position: relative;
+}
+
+.toggle-heading {
+  margin: 0;
+  font-size: 3.5rem;
+  color: #f4ead5;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.toggle-subtitle {
+  font-family: "Work Sans", sans-serif;
+  font-size: 1.25rem;
+  color: #d4c4a8;
+  margin-bottom: 3rem;
+  min-height: 2rem;
+}
+
+.toggle-area {
+  position: relative;
+  width: 400px;
+  height: 200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Toggle */
+.toggle-container {
+  position: relative;
+  z-index: 2;
+}
+
+.toggle {
+  width: 120px;
+  height: 60px;
+  background: #2c3e50;
+  border-radius: 30px;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.toggle:hover {
+  transform: scale(1.02);
+}
+
+.toggle.on {
+  background: #27ae60;
+}
+
+.toggle-switch {
+  width: 50px;
+  height: 50px;
+  background: #ecf0f1;
+  border-radius: 50%;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.toggle.on .toggle-switch {
+  left: 65px;
+}
+
+/* Trap hole */
+.trap-hole {
+  position: absolute;
+  width: 120px;
+  height: 80px;
+  background: radial-gradient(ellipse at center, #1a1410 0%, #0a0805 60%, transparent 100%);
+  border-radius: 50%;
+  left: 50%;
+  top: 60%;
+  transform: translateX(-50%);
+  z-index: 1;
+  animation: holeAppear 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: 
+    inset 0 4px 12px rgba(0, 0, 0, 0.9),
+    inset 0 8px 20px rgba(0, 0, 0, 0.6),
+    0 2px 4px rgba(143, 59, 65, 0.2);
+}
+
+@keyframes holeAppear {
+  from {
+    transform: translateX(-50%) scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Stickman */
+.stickman {
+  position: absolute;
+  width: 60px;
+  height: 100px;
+  left: -100px;
+  bottom: 0;
+  transition: left 2s ease-in-out;
+  z-index: 15;
+}
+
+.stickman .head {
+  width: 30px;
+  height: 30px;
+  background: #ff6b6b;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 15px;
+}
+
+.stickman .body {
+  width: 6px;
+  height: 40px;
+  background: #ff6b6b;
+  position: absolute;
+  top: 30px;
+  left: 27px;
+}
+
+.stickman .arm {
+  width: 30px;
+  height: 6px;
+  background: #ff6b6b;
+  position: absolute;
+  top: 40px;
+}
+
+.stickman .left-arm {
+  left: -3px;
+  transform-origin: right center;
+}
+
+.stickman .right-arm {
+  left: 33px;
+  transform-origin: left center;
+}
+
+.stickman .leg {
+  width: 6px;
+  height: 30px;
+  background: #ff6b6b;
+  position: absolute;
+  top: 70px;
+  transform-origin: top center;
+}
+
+.stickman .left-leg {
+  left: 21px;
+}
+
+.stickman .right-leg {
+  left: 33px;
+}
+
+/* Walking animation */
+.stickman.walking {
+  animation: walk 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes walk {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-5px); }
+}
+
+.stickman.walking .left-arm {
+  animation: armWalk 0.5s ease-in-out infinite alternate-reverse;
+}
+
+.stickman.walking .right-arm {
+  animation: armWalk 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes armWalk {
+  0% { transform: rotate(-15deg); }
+  100% { transform: rotate(15deg); }
+}
+
+.stickman.walking .left-leg {
+  animation: legWalk 0.5s ease-in-out infinite alternate;
+}
+
+.stickman.walking .right-leg {
+  animation: legWalk 0.5s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes legWalk {
+  0% { transform: rotate(-15deg); }
+  100% { transform: rotate(15deg); }
+}
+
+/* Reaching animation */
+.stickman.reaching .right-arm {
+  animation: reach 0.5s ease-in-out forwards;
+}
+
+@keyframes reach {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-90deg); }
+}
+
+/* Falling animation */
+.stickman.falling {
+  animation: fall 1s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+}
+
+@keyframes fall {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(200px) rotate(180deg);
+    opacity: 0;
+  }
+}
+
+.stickman.fallen {
+  opacity: 0;
+}
+
+/* Button */
+.trap-button {
+  margin-top: 2rem;
+  padding: 0.75rem 2rem;
+  font-family: "Work Sans", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f4ead5;
+  background: linear-gradient(135deg, #8f3b41 0%, #a84850 100%);
+  border: 2px solid #d4c4a8;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  animation: buttonPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes buttonPop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.trap-button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #a84850 0%, #c15560 100%);
+  box-shadow: 0 6px 12px rgba(143, 59, 65, 0.5);
+}
+
+.trap-button:active {
+  transform: scale(0.98);
+}
+
+/* Counter */
+.counter {
+  margin-top: 2rem;
+  font-family: "Work Sans", sans-serif;
+  font-size: 0.9rem;
+  color: #b4a490;
+  opacity: 0.7;
+}
+
+/* Footer */
+.toggle-footer {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+}
+
+.toggle-footer b {
+  font-family: "Work Sans", sans-serif;
+  font-size: 0.85rem;
+  color: #d4c4a8;
+  opacity: 0.7;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+}
+
+.toggle-footer a {
+  color: #d4c4a8;
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity 0.2s ease;
+  border-bottom: 1px solid rgba(212, 196, 168, 0.5);
+}
+
+.toggle-footer a:hover {
+  opacity: 1;
+  border-bottom-color: rgba(212, 196, 168, 0.9);
+}
