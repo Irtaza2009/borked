@@ -74,7 +74,8 @@ function App() {
         if (error) return <p className="cottage-text error">{error}</p>;
         if (!user) return <Login />;
         return user.hasSubmitted ? (
-          <Voting />
+         // <Voting />
+         <Submitted lockedType="votingLocked" />
         ) : (
           <Submitted lockedType="submitFirst" />
         );

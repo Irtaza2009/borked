@@ -20,7 +20,7 @@ const Home = ({ user }) => {
         )}
       </div>
 
-      <p className="home-text">A <b><i>bad</i> UI competition</b>! The <del>best</del> <b>worst</b> project gets a <a href="https://en.wikipedia.org/wiki/Useless_machine">Useless Box</a>!</p>
+      {/**  <p className="home-text">A <b><i>bad</i> UI competition</b>! The <del>best</del> <b>worst</b> project gets a <a href="https://en.wikipedia.org/wiki/Useless_machine">Useless Box</a>!</p> **/}
       <p className="home-text">more info goes here blah blah blah...</p>
 
       <HourglassLoader />
