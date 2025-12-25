@@ -14,7 +14,7 @@ const Home = ({ user }) => {
       </h2>
 
       <div className="home-text" style={{ display: "flex", flexDirection: "column", gap: "0.75rem", alignItems: "center" }}>
-        <h3 style={{ margin: 0, letterSpacing: "0.12em", textTransform: "uppercase" }}>A Bad UI Competition</h3>
+        {/** <h3 style={{ margin: 0, letterSpacing: "0.12em", textTransform: "uppercase" }}>A Bad UI Competition</h3> **/}
         {!user && (
           <button type="button" onClick={login}>Login with Slack</button>
         )}
