@@ -10,7 +10,6 @@ export default function UselessToggle({ onComplete }) {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [showButton, setShowButton] = useState(false);
   const [holeCreated, setHoleCreated] = useState(false);
-  const [stickmanFallen, setStickmanFallen] = useState(false);
   const [shouldCompleteOnToggle, setShouldCompleteOnToggle] = useState(false);
 
   // Check if user has visited before

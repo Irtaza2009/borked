@@ -59,14 +59,6 @@ export default function SubmissionForm({ user }) {
     return url;
   };
 
-  const handleProjectChange = (e) => {
-    const options = Array.from(e.target.selectedOptions).map((o) => ({
-      name: o.value,
-      text: o.getAttribute("data-time"),
-    }));
-    setSelectedProjects(options);
-  };
-
   const submit = async () => {
     if (
       !siteUrl ||
