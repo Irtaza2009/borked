@@ -85,7 +85,7 @@ router.get("/leaderboard", async (req, res) => {
         },
       },
       { $sort: { eloAverage: -1 } },
-      { $limit: 20 },
+      //{ $limit: 20 },
       {
         $lookup: {
           from: "users",
@@ -110,7 +110,7 @@ router.get("/leaderboard", async (req, res) => {
     // Get top voters
     const topVoters = await User.find({ votes: { $gt: 0 } })
       .sort({ votes: -1 })
-      .limit(20)
+      //.limit(20)
       .select("name avatar votes")
       .lean();
 
